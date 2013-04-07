@@ -16,10 +16,12 @@
 @property (strong, nonatomic) IBOutlet NSTableView *youDoNotFollowTable;
 
 @property (strong, nonatomic) IBOutlet NSTextField *usernameField;
-@property (strong, nonatomic) IBOutlet NSArrayController *doNotFollowYou;
-@property (strong, nonatomic) IBOutlet NSArrayController *youDoNotFollow;
+
+@property (strong, nonatomic) NSArray *doNotFollowYou;
+@property (strong, nonatomic) NSArray *youDoNotFollow;
 
 @property (strong, nonatomic) ADNClient *client;
+@property (strong, nonatomic) NSMutableDictionary *avatars;
 @end
 
 @implementation PRMAppDelegate
@@ -29,17 +31,19 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     NSString *token = NSProcessInfo.processInfo.environment[@"ADNACCESSTOKEN"];
-    self.client = [[ADNClient alloc] initWithAccessToken:token];
+    self.client  = [[ADNClient alloc] initWithAccessToken:token];
+    self.avatars = [NSMutableDictionary new];
 }
 
 #pragma mark NSTableViewDelegate
 
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
-    NSTableCellView   *view       = [tableView makeViewWithIdentifier:tableColumn.identifier owner:self];
-    NSArrayController *controller = tableView == self.doNotFollowYouTable ? self.doNotFollowYou : self.youDoNotFollow;
+    NSTableCellView *view = [tableView makeViewWithIdentifier:tableColumn.identifier owner:self];
     
-    ADNUser *user = controller.content[row];
+    NSArray *users = tableView == self.doNotFollowYouTable ? self.doNotFollowYou : self.youDoNotFollow;
+    ADNUser *user  = users[row];
+    view.imageView.objectValue = self.avatars[user.username];
     view.textField.stringValue = user.username;
     
     return view;
@@ -49,6 +53,10 @@
 
 - (IBAction)loadUser:(id)sender
 {
+    self.doNotFollowYou = @[ ];
+    self.youDoNotFollow = @[ ];
+    [self.avatars removeAllObjects];
+    
     //[self loadUserSynchronously];
     //[self loadUserWithGCD];
     [self loadUserWithPromises];
@@ -63,17 +71,6 @@
     return result;
 }
 
-- (void)showDifferencesBetweenFollowers:(NSSet *)followers following:(NSSet *)following
-{
-    NSSet *doNotFollowYou = [self objectsInSet:following notInSet:followers];
-    NSSet *youDoNotFollow = [self objectsInSet:followers notInSet:following];
-    
-    NSArray *descriptors = @[ [NSSortDescriptor sortDescriptorWithKey:@"username" ascending:YES] ];
-    self.doNotFollowYou.content = [[doNotFollowYou allObjects] sortedArrayUsingDescriptors:descriptors];
-    self.youDoNotFollow.content = [[youDoNotFollow allObjects] sortedArrayUsingDescriptors:descriptors];
-    
-}
-
 #pragma mark Concurrency
 
 - (void)loadUserSynchronously
@@ -83,7 +80,26 @@
     NSSet *followers = [self.client fetchFollowersForUser:user];
     NSSet *following = [self.client fetchFollowingForUser:user];
     
-    [self showDifferencesBetweenFollowers:followers following:following];
+    NSSet *doNotFollowYou = [self objectsInSet:following notInSet:followers];
+    NSSet *youDoNotFollow = [self objectsInSet:followers notInSet:following];
+    
+    NSArray *descriptors = @[ [NSSortDescriptor sortDescriptorWithKey:@"username" ascending:YES] ];
+    self.doNotFollowYou = [doNotFollowYou.allObjects sortedArrayUsingDescriptors:descriptors];
+    self.youDoNotFollow = [youDoNotFollow.allObjects sortedArrayUsingDescriptors:descriptors];
+    
+    for (ADNUser *u in doNotFollowYou)
+    {
+        NSImage *avatar = [self.client fetchAvatarForUser:u];
+        self.avatars[u.username] = avatar;
+        [self.doNotFollowYouTable reloadData];
+    }
+    
+    for (ADNUser *u in youDoNotFollow)
+    {
+        NSImage *avatar = [self.client fetchAvatarForUser:u];
+        self.avatars[u.username] = avatar;
+        [self.youDoNotFollowTable reloadData];
+    }
 }
 
 - (void)loadUserWithGCD
@@ -106,7 +122,34 @@
         });
         
         dispatch_group_notify(group, mainQueue, ^{
-            [self showDifferencesBetweenFollowers:followers following:following];
+            NSSet *doNotFollowYou = [self objectsInSet:following notInSet:followers];
+            NSSet *youDoNotFollow = [self objectsInSet:followers notInSet:following];
+            
+            NSArray *descriptors = @[ [NSSortDescriptor sortDescriptorWithKey:@"username" ascending:YES] ];
+            self.doNotFollowYou = [doNotFollowYou.allObjects sortedArrayUsingDescriptors:descriptors];
+            self.youDoNotFollow = [youDoNotFollow.allObjects sortedArrayUsingDescriptors:descriptors];
+            
+            for (ADNUser *u in doNotFollowYou)
+            {
+                dispatch_async(defaultQueue, ^{
+                    NSImage *avatar = [self.client fetchAvatarForUser:u];
+                    dispatch_async(mainQueue, ^{
+                        self.avatars[u.username] = avatar;
+                        [self.doNotFollowYouTable reloadData];
+                    });
+                });
+            }
+            
+            for (ADNUser *u in youDoNotFollow)
+            {
+                dispatch_async(defaultQueue, ^{
+                    NSImage *avatar = [self.client fetchAvatarForUser:u];
+                    dispatch_async(mainQueue, ^{
+                        self.avatars[u.username] = avatar;
+                        [self.youDoNotFollowTable reloadData];
+                    });
+                });
+            }
         });
     });
 }
@@ -123,7 +166,33 @@
         finally:^(id result, NSError *error) {
             NSSet *followers = result[0];
             NSSet *following = result[1];
-            [self showDifferencesBetweenFollowers:followers following:following];
+            
+            NSSet *doNotFollowYou = [self objectsInSet:following notInSet:followers];
+            NSSet *youDoNotFollow = [self objectsInSet:followers notInSet:following];
+            
+            NSArray *descriptors = @[ [NSSortDescriptor sortDescriptorWithKey:@"username" ascending:YES] ];
+            self.doNotFollowYou = [doNotFollowYou.allObjects sortedArrayUsingDescriptors:descriptors];
+            self.youDoNotFollow = [youDoNotFollow.allObjects sortedArrayUsingDescriptors:descriptors];
+            
+            for (ADNUser *u in doNotFollowYou)
+            {
+                [[Promise
+                    of:^{ return [self.client fetchAvatarForUser:u]; }]
+                    finally:^(id result, NSError *error) {
+                        self.avatars[u.username] = result;
+                        [self.doNotFollowYouTable reloadData];
+                    }];
+            }
+            
+            for (ADNUser *u in youDoNotFollow)
+            {
+                [[Promise
+                    of:^{ return [self.client fetchAvatarForUser:u]; }]
+                    finally:^(id result, NSError *error) {
+                        self.avatars[u.username] = result;
+                        [self.youDoNotFollowTable reloadData];
+                    }];
+            }
         }];
 }
 

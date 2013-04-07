@@ -24,12 +24,20 @@
     return self;
 }
 
+#pragma mark Users
+
 - (ADNUser *)fetchUserWithUsername:(NSString *)username
 {
     NSString *atUsername = [username hasPrefix:@"@"] ? username : [@"@" stringByAppendingString:username];
     NSArray  *result     = [self fetchURL:@"https://alpha-api.app.net/stream/0/users/search"
                            withParameters:@{ @"q": atUsername }];
     return [ADNUser userWithDictionary:result[0]];
+}
+
+- (NSImage *)fetchAvatarForUser:(ADNUser *)user
+{
+    NSData *data = [self _fetchURL:user.avatarURL withParameters:@{}];
+    return [[NSImage alloc] initWithData:data];
 }
 
 #pragma mark Following
@@ -66,16 +74,15 @@
 
 #pragma mark Private Methods
 
-- (id)_fetchURL:(NSString *)url withParameters:(NSDictionary *)params
+- (NSData *)_fetchURL:(NSString *)url withParameters:(NSDictionary *)params
 {
     NSString *query   = [self queryStringForParameters:params];
     NSURL    *fulLURL = [NSURL URLWithString:[url stringByAppendingString:query]];
     
     NSURLRequest *request   = [NSURLRequest requestWithURL:fulLURL];
     NSData       *data      = [NSURLConnection sendSynchronousRequest:request returningResponse:NULL error:NULL];
-    NSDictionary *result    = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
     
-    return result;
+    return data;
 }
 
 - (id)fetchPaginatedURL:(NSString *)url withParameters:(NSDictionary *)params
@@ -90,15 +97,16 @@
         pParams[@"count"] = @"200";
         if (beforeID) { pParams[@"before_id"] = beforeID; }
         
-        NSDictionary *response = [self _fetchURL:url withParameters:pParams];
+        NSData       *response  = [self _fetchURL:url withParameters:pParams];
+        NSDictionary *json      = [NSJSONSerialization JSONObjectWithData:response options:0 error:NULL];
         
-        for (NSDictionary *object in response[@"data"])
+        for (NSDictionary *object in json[@"data"])
         {
             [result addObject:object];
         }
         
-        more     = [response[@"meta"][@"more"] boolValue];
-        beforeID = response[@"meta"][@"min_id"];
+        more     = [json[@"meta"][@"more"] boolValue];
+        beforeID = json[@"meta"][@"min_id"];
     }
     
     return result;
@@ -106,7 +114,9 @@
 
 - (id)fetchURL:(NSString *)url withParameters:(NSDictionary *)params
 {
-    return [self _fetchURL:url withParameters:params][@"data"];
+    NSData       *response = [self _fetchURL:url withParameters:params];
+    NSDictionary *json     = [NSJSONSerialization JSONObjectWithData:response options:0 error:NULL];
+    return json[@"data"];
 }
 
 - (NSString *)queryStringForParameters:(NSDictionary *)params

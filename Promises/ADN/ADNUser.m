@@ -52,6 +52,7 @@
         _userID     = dictionary[@"id"];
         _username   = dictionary[@"username"];
         _name       = dictionary[@"name"];
+        _avatarURL  = dictionary[@"avatar_image"][@"url"];
     }
     
     return self;

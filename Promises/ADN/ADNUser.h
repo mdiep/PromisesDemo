@@ -13,6 +13,7 @@
 @property (strong, nonatomic, readonly) NSString *userID;
 @property (strong, nonatomic, readonly) NSString *username;
 @property (strong, nonatomic, readonly) NSString *name;
+@property (strong, nonatomic, readonly) NSString *avatarURL;
 
 + (id)userWithDictionary:(NSDictionary *)dictionary;
 - (id)initWithDictionary:(NSDictionary *)dictionary;

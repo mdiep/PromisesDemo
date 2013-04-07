@@ -16,12 +16,21 @@
 
 - (id)initWithAccessToken:(NSString *)accessToken;
 
+#pragma mark Users
+
 // Fetch information about a user using their username.
 //
 // username - Name of the user with or without the leading "@".
 //
 // Returns a ADNUser that represents the user.
 - (ADNUser *)fetchUserWithUsername:(NSString *)username;
+
+// Fetch the avatar for a user.
+//
+// user - The user whose avatar should be downloaded.
+//
+// Returns an image of the avatar.
+- (NSImage *)fetchAvatarForUser:(ADNUser *)user;
 
 #pragma mark Following
 
