@@ -13,6 +13,9 @@
 		BEACE5C0170BA76E00EAEAC3 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = BEACE5BE170BA76E00EAEAC3 /* Credits.rtf */; };
 		BEACE5C3170BA76E00EAEAC3 /* PRMAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BEACE5C2170BA76E00EAEAC3 /* PRMAppDelegate.m */; };
 		BEACE5C6170BA76E00EAEAC3 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEACE5C4170BA76E00EAEAC3 /* MainMenu.xib */; };
+		BEACE5CE170BAA6200EAEAC3 /* ADNClient.m in Sources */ = {isa = PBXBuildFile; fileRef = BEACE5CD170BAA6200EAEAC3 /* ADNClient.m */; };
+		BEACE5D2170BCCF400EAEAC3 /* ADNUser.m in Sources */ = {isa = PBXBuildFile; fileRef = BEACE5D1170BCCF400EAEAC3 /* ADNUser.m */; };
+		BEACE5D5171066E900EAEAC3 /* Promise.m in Sources */ = {isa = PBXBuildFile; fileRef = BEACE5D4171066E900EAEAC3 /* Promise.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +32,12 @@
 		BEACE5C1170BA76E00EAEAC3 /* PRMAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PRMAppDelegate.h; sourceTree = "<group>"; };
 		BEACE5C2170BA76E00EAEAC3 /* PRMAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PRMAppDelegate.m; sourceTree = "<group>"; };
 		BEACE5C5170BA76E00EAEAC3 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		BEACE5CC170BAA6200EAEAC3 /* ADNClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADNClient.h; sourceTree = "<group>"; };
+		BEACE5CD170BAA6200EAEAC3 /* ADNClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADNClient.m; sourceTree = "<group>"; };
+		BEACE5D0170BCCF400EAEAC3 /* ADNUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADNUser.h; sourceTree = "<group>"; };
+		BEACE5D1170BCCF400EAEAC3 /* ADNUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADNUser.m; sourceTree = "<group>"; };
+		BEACE5D3171066E900EAEAC3 /* Promise.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Promise.h; sourceTree = "<group>"; };
+		BEACE5D4171066E900EAEAC3 /* Promise.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Promise.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,8 +91,11 @@
 		BEACE5B5170BA76E00EAEAC3 /* Promises */ = {
 			isa = PBXGroup;
 			children = (
+				BEACE5CF170BAA6500EAEAC3 /* ADN */,
 				BEACE5C1170BA76E00EAEAC3 /* PRMAppDelegate.h */,
 				BEACE5C2170BA76E00EAEAC3 /* PRMAppDelegate.m */,
+				BEACE5D3171066E900EAEAC3 /* Promise.h */,
+				BEACE5D4171066E900EAEAC3 /* Promise.m */,
 				BEACE5C4170BA76E00EAEAC3 /* MainMenu.xib */,
 				BEACE5B6170BA76E00EAEAC3 /* Supporting Files */,
 			);
@@ -100,6 +112,17 @@
 				BEACE5BE170BA76E00EAEAC3 /* Credits.rtf */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		BEACE5CF170BAA6500EAEAC3 /* ADN */ = {
+			isa = PBXGroup;
+			children = (
+				BEACE5CC170BAA6200EAEAC3 /* ADNClient.h */,
+				BEACE5CD170BAA6200EAEAC3 /* ADNClient.m */,
+				BEACE5D0170BCCF400EAEAC3 /* ADNUser.h */,
+				BEACE5D1170BCCF400EAEAC3 /* ADNUser.m */,
+			);
+			path = ADN;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -169,6 +192,9 @@
 			files = (
 				BEACE5BC170BA76E00EAEAC3 /* main.m in Sources */,
 				BEACE5C3170BA76E00EAEAC3 /* PRMAppDelegate.m in Sources */,
+				BEACE5CE170BAA6200EAEAC3 /* ADNClient.m in Sources */,
+				BEACE5D2170BCCF400EAEAC3 /* ADNUser.m in Sources */,
+				BEACE5D5171066E900EAEAC3 /* Promise.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
