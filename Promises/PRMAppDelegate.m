@@ -11,7 +11,10 @@
 #import "ADNClient.h"
 #import "Promise.h"
 
-@interface PRMAppDelegate ()
+@interface PRMAppDelegate () <NSTableViewDelegate>
+@property (strong, nonatomic) IBOutlet NSTableView *doNotFollowYouTable;
+@property (strong, nonatomic) IBOutlet NSTableView *youDoNotFollowTable;
+
 @property (strong, nonatomic) IBOutlet NSTextField *usernameField;
 @property (strong, nonatomic) IBOutlet NSArrayController *doNotFollowYou;
 @property (strong, nonatomic) IBOutlet NSArrayController *youDoNotFollow;
@@ -27,6 +30,19 @@
 {
     NSString *token = NSProcessInfo.processInfo.environment[@"ADNACCESSTOKEN"];
     self.client = [[ADNClient alloc] initWithAccessToken:token];
+}
+
+#pragma mark NSTableViewDelegate
+
+- (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
+{
+    NSTableCellView   *view       = [tableView makeViewWithIdentifier:tableColumn.identifier owner:self];
+    NSArrayController *controller = tableView == self.doNotFollowYouTable ? self.doNotFollowYou : self.youDoNotFollow;
+    
+    ADNUser *user = controller.content[row];
+    view.textField.stringValue = user.username;
+    
+    return view;
 }
 
 #pragma mark Actions
