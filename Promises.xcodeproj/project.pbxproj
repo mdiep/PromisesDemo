@@ -17,7 +17,54 @@
 		BEACE5D2170BCCF400EAEAC3 /* ADNUser.m in Sources */ = {isa = PBXBuildFile; fileRef = BEACE5D1170BCCF400EAEAC3 /* ADNUser.m */; };
 		BEACE5D5171066E900EAEAC3 /* Promise.m in Sources */ = {isa = PBXBuildFile; fileRef = BEACE5D4171066E900EAEAC3 /* Promise.m */; };
 		BEBC7B4417135330000E2F30 /* ADNPromiseClient.m in Sources */ = {isa = PBXBuildFile; fileRef = BEBC7B4317135330000E2F30 /* ADNPromiseClient.m */; };
+		BEBC7B5317135650000E2F30 /* ReactiveCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BEBC7B4E1713562F000E2F30 /* ReactiveCocoa.framework */; };
+		BEBC7B5517135666000E2F30 /* ReactiveCocoa.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BEBC7B4E1713562F000E2F30 /* ReactiveCocoa.framework */; };
+		BEBC7B5F17136155000E2F30 /* ADNReactiveClient.m in Sources */ = {isa = PBXBuildFile; fileRef = BEBC7B5E17136155000E2F30 /* ADNReactiveClient.m */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		BEBC7B4D1713562F000E2F30 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BEBC7B451713562E000E2F30 /* ReactiveCocoa.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 88037F8315056328001A5B19;
+			remoteInfo = ReactiveCocoa;
+		};
+		BEBC7B4F1713562F000E2F30 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BEBC7B451713562E000E2F30 /* ReactiveCocoa.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 88F440AB153DAC820097B4C3;
+			remoteInfo = "ReactiveCocoa-iOS";
+		};
+		BEBC7B511713562F000E2F30 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BEBC7B451713562E000E2F30 /* ReactiveCocoa.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 88CDF7DC15000FCF00163A9F;
+			remoteInfo = ReactiveCocoaTests;
+		};
+		BEBC7B5617135674000E2F30 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BEBC7B451713562E000E2F30 /* ReactiveCocoa.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 88037F8215056328001A5B19;
+			remoteInfo = ReactiveCocoa;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		BEBC7B5417135658000E2F30 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				BEBC7B5517135666000E2F30 /* ReactiveCocoa.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		BEACE5AC170BA76E00EAEAC3 /* Promises.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Promises.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -41,6 +88,9 @@
 		BEACE5D4171066E900EAEAC3 /* Promise.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Promise.m; sourceTree = "<group>"; };
 		BEBC7B4217135330000E2F30 /* ADNPromiseClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADNPromiseClient.h; sourceTree = "<group>"; };
 		BEBC7B4317135330000E2F30 /* ADNPromiseClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADNPromiseClient.m; sourceTree = "<group>"; };
+		BEBC7B451713562E000E2F30 /* ReactiveCocoa.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactiveCocoa.xcodeproj; path = ReactiveCocoa/ReactiveCocoaFramework/ReactiveCocoa.xcodeproj; sourceTree = "<group>"; };
+		BEBC7B5D17136155000E2F30 /* ADNReactiveClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADNReactiveClient.h; sourceTree = "<group>"; };
+		BEBC7B5E17136155000E2F30 /* ADNReactiveClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADNReactiveClient.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,6 +98,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BEBC7B5317135650000E2F30 /* ReactiveCocoa.framework in Frameworks */,
 				BEACE5B0170BA76E00EAEAC3 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -75,6 +126,7 @@
 		BEACE5AE170BA76E00EAEAC3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				BEBC7B451713562E000E2F30 /* ReactiveCocoa.xcodeproj */,
 				BEACE5AF170BA76E00EAEAC3 /* Cocoa.framework */,
 				BEACE5B1170BA76E00EAEAC3 /* Other Frameworks */,
 			);
@@ -124,10 +176,22 @@
 				BEACE5CD170BAA6200EAEAC3 /* ADNClient.m */,
 				BEBC7B4217135330000E2F30 /* ADNPromiseClient.h */,
 				BEBC7B4317135330000E2F30 /* ADNPromiseClient.m */,
+				BEBC7B5D17136155000E2F30 /* ADNReactiveClient.h */,
+				BEBC7B5E17136155000E2F30 /* ADNReactiveClient.m */,
 				BEACE5D0170BCCF400EAEAC3 /* ADNUser.h */,
 				BEACE5D1170BCCF400EAEAC3 /* ADNUser.m */,
 			);
 			path = ADN;
+			sourceTree = "<group>";
+		};
+		BEBC7B461713562E000E2F30 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				BEBC7B4E1713562F000E2F30 /* ReactiveCocoa.framework */,
+				BEBC7B501713562F000E2F30 /* libReactiveCocoa-iOS.a */,
+				BEBC7B521713562F000E2F30 /* ReactiveCocoaTests.octest */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -140,10 +204,12 @@
 				BEACE5A8170BA76E00EAEAC3 /* Sources */,
 				BEACE5A9170BA76E00EAEAC3 /* Frameworks */,
 				BEACE5AA170BA76E00EAEAC3 /* Resources */,
+				BEBC7B5417135658000E2F30 /* CopyFiles */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				BEBC7B5717135674000E2F30 /* PBXTargetDependency */,
 			);
 			name = Promises;
 			productName = Promises;
@@ -170,12 +236,42 @@
 			mainGroup = BEACE5A3170BA76E00EAEAC3;
 			productRefGroup = BEACE5AD170BA76E00EAEAC3 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = BEBC7B461713562E000E2F30 /* Products */;
+					ProjectRef = BEBC7B451713562E000E2F30 /* ReactiveCocoa.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				BEACE5AB170BA76E00EAEAC3 /* Promises */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		BEBC7B4E1713562F000E2F30 /* ReactiveCocoa.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ReactiveCocoa.framework;
+			remoteRef = BEBC7B4D1713562F000E2F30 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		BEBC7B501713562F000E2F30 /* libReactiveCocoa-iOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libReactiveCocoa-iOS.a";
+			remoteRef = BEBC7B4F1713562F000E2F30 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		BEBC7B521713562F000E2F30 /* ReactiveCocoaTests.octest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = ReactiveCocoaTests.octest;
+			remoteRef = BEBC7B511713562F000E2F30 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		BEACE5AA170BA76E00EAEAC3 /* Resources */ = {
@@ -201,10 +297,19 @@
 				BEACE5D2170BCCF400EAEAC3 /* ADNUser.m in Sources */,
 				BEACE5D5171066E900EAEAC3 /* Promise.m in Sources */,
 				BEBC7B4417135330000E2F30 /* ADNPromiseClient.m in Sources */,
+				BEBC7B5F17136155000E2F30 /* ADNReactiveClient.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		BEBC7B5717135674000E2F30 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ReactiveCocoa;
+			targetProxy = BEBC7B5617135674000E2F30 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		BEACE5B8170BA76E00EAEAC3 /* InfoPlist.strings */ = {

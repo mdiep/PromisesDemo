@@ -8,8 +8,11 @@
 
 #import "PRMAppDelegate.h"
 
+#import <ReactiveCocoa/ReactiveCocoa.h>
+
 #import "ADNClient.h"
 #import "ADNPromiseClient.h"
+#import "ADNReactiveClient.h"
 #import "Promise.h"
 
 @interface PRMAppDelegate () <NSTableViewDelegate>
@@ -61,7 +64,8 @@
     //[self loadUserSynchronously];
     //[self loadUserWithGCD];
     //[self loadUserWithPromises];
-    [self loadUserWithPromisesClient];
+    //[self loadUserWithPromisesClient];
+    [self loadUserWithReactiveCocoaClient];
 }
 
 #pragma mark Private Methods
@@ -201,6 +205,41 @@
                                [self updateWithAvatar:result forUser:user];
                            }];
                }];
+        }];
+}
+
+- (void)loadUserWithReactiveCocoaClient
+{
+    ADNReactiveClient *client = [[ADNReactiveClient alloc] initWithClient:self.client];
+    
+    RACSignal *fetchUser = [client fetchUserWithUsername:self.usernameField.stringValue];
+    
+    [[fetchUser
+        flattenMap:^(id user) {
+            return [RACSignal
+                combineLatest:@[
+                    [client fetchFollowersForUser:user],
+                    [client fetchFollowingForUser:user],
+                ]
+                reduce:^(NSSet *followers, NSSet *following) {
+                    return [self updateWithFollowers:followers following:following];
+                }];
+        }]
+        subscribeNext:^(id x) {
+            NSSet *displayedUsers = x;
+            [[[displayedUsers.rac_sequence.signal
+                map:^id(id user) {
+                    return [[RACSignal
+                        defer:^{ return [client fetchAvatarForUser:user]; }]
+                        map:^(NSImage *image) {
+                            return RACTuplePack(user, image);
+                        }];
+                }]
+                flatten:3]
+                subscribeNext:^(RACTuple *xs) {
+                    RACTupleUnpack(ADNUser *user, NSImage *image) = xs;
+                    [self updateWithAvatar:image forUser:user];
+                }];
         }];
 }
 
