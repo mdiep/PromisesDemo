@@ -22,6 +22,18 @@
 // Returns a Promise that is fulfilled when all of the promises are fulfilled.
 + (instancetype)when:(NSArray *)promises;
 
+// Return a promise that executes a block for each input but limits concurrency.
+//
+// inputs - The objects that are used as inputs to the block.
+// limit  - The number of concurrent operations that are allowed at a time.
+// block  - A block that returns a promise from an input object.
+//
+// Returns a new promise that is fulfilled when all the promises returned from the block have
+// completed.
++ (instancetype)map:(NSArray *)inputs
+              limit:(NSUInteger)limit
+          withBlock:(Promise *(^)(id object))block;
+
 // Execute a synchronous block asynchronously.
 //
 // Returns a new promise that is fulfilled when the block finishes.
@@ -53,6 +65,8 @@
 // Execute a block with the result or error of the promise.
 //
 // block - A block that takes the result and the error of the promise.
-- (void)finally:(void (^)(id result, NSError *error))block;
+//
+// Returns self.
+- (instancetype)finally:(void (^)(id result, NSError *error))block;
 
 @end

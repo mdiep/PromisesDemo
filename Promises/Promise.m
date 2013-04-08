@@ -73,16 +73,67 @@
     return when;
 }
 
++ (instancetype)map:(NSArray *)inputs
+              limit:(NSUInteger)limit
+          withBlock:(Promise *(^)(id object))block
+{
+    Promise *result = [Promise new];
+    
+    dispatch_semaphore_t limitSemaphore = dispatch_semaphore_create(limit);
+    
+    dispatch_queue_t defaultQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_queue_t mainQueue    = dispatch_get_main_queue();
+    
+    dispatch_group_t group = dispatch_group_create();
+    
+    for (id input in inputs)
+    {
+        dispatch_group_async(group, defaultQueue, ^{
+            dispatch_semaphore_wait(limitSemaphore, DISPATCH_TIME_FOREVER);
+            
+            @synchronized(result)
+            {
+                if (result.isRejected)
+                {
+                    dispatch_semaphore_signal(limitSemaphore);
+                    return;
+                }
+            }
+            
+            [block(input) finally:^(id result, NSError *error) {
+                if (error)
+                {
+                    @synchronized(result)
+                    {
+                        [result reject:error];
+                    }
+                }
+                
+                dispatch_semaphore_signal(limitSemaphore);
+            }];
+        });
+    }
+    
+    dispatch_group_notify(group, mainQueue, ^{
+        if (!result.isRejected)
+        {
+            [result resolve:@YES];
+        }
+    });
+    
+    return result;
+}
+
 + (instancetype)of:(id (^)())block
 {
     Promise *promise = [self new];
     
     dispatch_queue_t defaultQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    dispatch_queue_t currentQueue = dispatch_get_current_queue();
+    dispatch_queue_t mainQueue    = dispatch_get_main_queue();
     
     dispatch_async(defaultQueue, ^{
         id result = block();
-        dispatch_async(currentQueue, ^{
+        dispatch_async(mainQueue, ^{
             [promise resolve:result];
         });
     });
@@ -153,7 +204,7 @@
     }];
 }
 
-- (void)finally:(void (^)(id result, NSError *error))block
+- (instancetype)finally:(void (^)(id result, NSError *error))block
 {
     if (self.isResolved)
     {
@@ -167,6 +218,8 @@
     {
         self.doBlocks = [self.doBlocks arrayByAddingObject:[block copy]];
     }
+    
+    return self;
 }
 
 #pragma mark Fulfillment

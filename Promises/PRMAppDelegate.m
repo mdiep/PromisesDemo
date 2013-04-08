@@ -87,18 +87,14 @@
     self.doNotFollowYou = [doNotFollowYou.allObjects sortedArrayUsingDescriptors:descriptors];
     self.youDoNotFollow = [youDoNotFollow.allObjects sortedArrayUsingDescriptors:descriptors];
     
-    for (ADNUser *u in doNotFollowYou)
+    NSSet *displayedUsers = [doNotFollowYou setByAddingObjectsFromSet:youDoNotFollow];
+    for (ADNUser *u in displayedUsers)
     {
         NSImage *avatar = [self.client fetchAvatarForUser:u];
         self.avatars[u.username] = avatar;
-        [self.doNotFollowYouTable reloadData];
-    }
-    
-    for (ADNUser *u in youDoNotFollow)
-    {
-        NSImage *avatar = [self.client fetchAvatarForUser:u];
-        self.avatars[u.username] = avatar;
-        [self.youDoNotFollowTable reloadData];
+        
+        NSTableView *tableView = [self.doNotFollowYou containsObject:u] ? self.doNotFollowYouTable : self.youDoNotFollowTable;
+        [tableView reloadData];
     }
 }
 
@@ -129,24 +125,22 @@
             self.doNotFollowYou = [doNotFollowYou.allObjects sortedArrayUsingDescriptors:descriptors];
             self.youDoNotFollow = [youDoNotFollow.allObjects sortedArrayUsingDescriptors:descriptors];
             
-            for (ADNUser *u in doNotFollowYou)
-            {
-                dispatch_async(defaultQueue, ^{
-                    NSImage *avatar = [self.client fetchAvatarForUser:u];
-                    dispatch_async(mainQueue, ^{
-                        self.avatars[u.username] = avatar;
-                        [self.doNotFollowYouTable reloadData];
-                    });
-                });
-            }
+            dispatch_semaphore_t limitSemaphore = dispatch_semaphore_create(3);
             
-            for (ADNUser *u in youDoNotFollow)
+            NSSet *displayedUsers = [doNotFollowYou setByAddingObjectsFromSet:youDoNotFollow];
+            for (ADNUser *u in displayedUsers)
             {
                 dispatch_async(defaultQueue, ^{
+                    dispatch_semaphore_wait(limitSemaphore, DISPATCH_TIME_FOREVER);
+                    
                     NSImage *avatar = [self.client fetchAvatarForUser:u];
                     dispatch_async(mainQueue, ^{
+                        dispatch_semaphore_signal(limitSemaphore);
+                        
                         self.avatars[u.username] = avatar;
-                        [self.youDoNotFollowTable reloadData];
+                        
+                        NSTableView *tableView = [self.doNotFollowYou containsObject:u] ? self.doNotFollowYouTable : self.youDoNotFollowTable;
+                        [tableView reloadData];
                     });
                 });
             }
@@ -174,25 +168,20 @@
             self.doNotFollowYou = [doNotFollowYou.allObjects sortedArrayUsingDescriptors:descriptors];
             self.youDoNotFollow = [youDoNotFollow.allObjects sortedArrayUsingDescriptors:descriptors];
             
-            for (ADNUser *u in doNotFollowYou)
-            {
-                [[Promise
-                    of:^{ return [self.client fetchAvatarForUser:u]; }]
-                    finally:^(id result, NSError *error) {
-                        self.avatars[u.username] = result;
-                        [self.doNotFollowYouTable reloadData];
-                    }];
-            }
-            
-            for (ADNUser *u in youDoNotFollow)
-            {
-                [[Promise
-                    of:^{ return [self.client fetchAvatarForUser:u]; }]
-                    finally:^(id result, NSError *error) {
-                        self.avatars[u.username] = result;
-                        [self.youDoNotFollowTable reloadData];
-                    }];
-            }
+            NSSet *displayedUsers = [doNotFollowYou setByAddingObjectsFromSet:youDoNotFollow];
+            [Promise map:displayedUsers.allObjects
+                   limit:3
+               withBlock:^(id object) {
+                   ADNUser *user = object;
+                   return [[Promise
+                            of:^{ return [self.client fetchAvatarForUser:user]; }]
+                            finally:^(id result, NSError *error) {
+                               self.avatars[user.username] = result;
+                               
+                               NSTableView *tableView = [self.doNotFollowYou containsObject:user] ? self.doNotFollowYouTable : self.youDoNotFollowTable;
+                               [tableView reloadData];
+                           }];
+               }];
         }];
 }
 
