@@ -9,6 +9,7 @@
 #import "PRMAppDelegate.h"
 
 #import "ADNClient.h"
+#import "ADNPromiseClient.h"
 #import "Promise.h"
 
 @interface PRMAppDelegate () <NSTableViewDelegate>
@@ -59,7 +60,8 @@
     
     //[self loadUserSynchronously];
     //[self loadUserWithGCD];
-    [self loadUserWithPromises];
+    //[self loadUserWithPromises];
+    [self loadUserWithPromisesClient];
 }
 
 #pragma mark Private Methods
@@ -171,6 +173,32 @@
                             of:^{ return [self.client fetchAvatarForUser:user]; }]
                             finally:^(id result, NSError *error) {
                                 [self updateWithAvatar:result forUser:user];
+                           }];
+               }];
+        }];
+}
+
+- (void)loadUserWithPromisesClient
+{
+    ADNPromiseClient *client = [[ADNPromiseClient alloc] initWithClient:self.client];
+    
+    Promise *fetchUser = [client fetchUserWithUsername:self.usernameField.stringValue];
+    
+    [[Promise
+        when:@[
+            [fetchUser then:^(id user) { return [self.client fetchFollowersForUser:user]; }],
+            [fetchUser then:^(id user) { return [self.client fetchFollowingForUser:user]; }],
+        ]]
+        finally:^(id result, NSError *error) {
+            NSSet *displayedUsers = [self updateWithFollowers:result[0] following:result[1]];
+         
+            [Promise map:displayedUsers.allObjects
+                   limit:3
+               withBlock:^(id object) {
+                   ADNUser *user = object;
+                   return [[client fetchAvatarForUser:user]
+                           finally:^(id result, NSError *error) {
+                               [self updateWithAvatar:result forUser:user];
                            }];
                }];
         }];

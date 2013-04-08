@@ -16,6 +16,7 @@
 		BEACE5CE170BAA6200EAEAC3 /* ADNClient.m in Sources */ = {isa = PBXBuildFile; fileRef = BEACE5CD170BAA6200EAEAC3 /* ADNClient.m */; };
 		BEACE5D2170BCCF400EAEAC3 /* ADNUser.m in Sources */ = {isa = PBXBuildFile; fileRef = BEACE5D1170BCCF400EAEAC3 /* ADNUser.m */; };
 		BEACE5D5171066E900EAEAC3 /* Promise.m in Sources */ = {isa = PBXBuildFile; fileRef = BEACE5D4171066E900EAEAC3 /* Promise.m */; };
+		BEBC7B4417135330000E2F30 /* ADNPromiseClient.m in Sources */ = {isa = PBXBuildFile; fileRef = BEBC7B4317135330000E2F30 /* ADNPromiseClient.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,8 @@
 		BEACE5D1170BCCF400EAEAC3 /* ADNUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADNUser.m; sourceTree = "<group>"; };
 		BEACE5D3171066E900EAEAC3 /* Promise.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Promise.h; sourceTree = "<group>"; };
 		BEACE5D4171066E900EAEAC3 /* Promise.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Promise.m; sourceTree = "<group>"; };
+		BEBC7B4217135330000E2F30 /* ADNPromiseClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADNPromiseClient.h; sourceTree = "<group>"; };
+		BEBC7B4317135330000E2F30 /* ADNPromiseClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADNPromiseClient.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +122,8 @@
 			children = (
 				BEACE5CC170BAA6200EAEAC3 /* ADNClient.h */,
 				BEACE5CD170BAA6200EAEAC3 /* ADNClient.m */,
+				BEBC7B4217135330000E2F30 /* ADNPromiseClient.h */,
+				BEBC7B4317135330000E2F30 /* ADNPromiseClient.m */,
 				BEACE5D0170BCCF400EAEAC3 /* ADNUser.h */,
 				BEACE5D1170BCCF400EAEAC3 /* ADNUser.m */,
 			);
@@ -195,6 +200,7 @@
 				BEACE5CE170BAA6200EAEAC3 /* ADNClient.m in Sources */,
 				BEACE5D2170BCCF400EAEAC3 /* ADNUser.m in Sources */,
 				BEACE5D5171066E900EAEAC3 /* Promise.m in Sources */,
+				BEBC7B4417135330000E2F30 /* ADNPromiseClient.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -330,6 +336,7 @@
 				BEACE5CB170BA76E00EAEAC3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
